@@ -14,13 +14,13 @@ static const char col_gray4[]       = "#F0F0F0"; // White gray
 static const char col_cyan[]        = "#005577";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
-	[SchemeNorm] = { col_gray3, col_gray1, col_gray1 },
-	[SchemeSel]  = { col_gray1, col_gray4, col_gray1 },
-	[SchemeStatus]  = { col_gray3, col_gray1,  "#000000"  }, // Statusbar right {text,background,not used but cannot be empty}
-	[SchemeTagsSel]  = { col_gray1, col_gray4,  "#000000"  }, // Tagbar left selected {text,background,not used but cannot be empty}
-    [SchemeTagsNorm]  = { col_gray3, col_gray1,  "#000000"  }, // Tagbar left unselected {text,background,not used but cannot be empty}
-    [SchemeInfoSel]  = { col_gray3, col_gray1,  "#000000"  }, // infobar middle  selected {text,background,not used but cannot be empty}
-    [SchemeInfoNorm]  = { col_gray3, col_gray1,  "#000000"  }, // infobar middle  unselected {text,background,not used but cannot be empty}
+	[SchemeNorm] 		= { col_gray3, col_gray1, col_gray1 },
+	[SchemeSel]  		= { col_gray1, col_gray4, col_gray1 },
+	[SchemeStatus]  	= { col_gray3, col_gray1,  "#000000"  }, // Statusbar right {text,background,not used but cannot be empty}
+	[SchemeTagsSel]  	= { col_gray1, col_gray4,  "#000000"  }, // Tagbar left selected {text,background,not used but cannot be empty}
+    [SchemeTagsNorm]  	= { col_gray3, col_gray1,  "#000000"  }, // Tagbar left unselected {text,background,not used but cannot be empty}
+    [SchemeInfoSel]  	= { col_gray3, col_gray1,  "#000000"  }, // infobar middle  selected {text,background,not used but cannot be empty}
+    [SchemeInfoNorm]  	= { col_gray3, col_gray1,  "#000000"  }, // infobar middle  unselected {text,background,not used but cannot be empty}
 };
 
 /* tagging */
@@ -31,9 +31,10 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	/* class			instance		title			tags mask     iscentered   isfloating   monitor */
+	{ "Gimp",			NULL,			NULL,			0,            0,           1,           -1 },
+	{ "Firefox",		NULL,			NULL,			1 << 8,       0,           0,           -1 },
+	{ "st-256color",	"st-256color",	"pulsemixer",	1 << 8,       1,           1,           -1 },
 };
 
 /* layout(s) */
@@ -66,9 +67,10 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 static const char *termcmd[]  = { "st", NULL };
 
 /* Personal variable*/
-static const char *brave[]  = { "brave", NULL };
-static const char *discord[]  = { "discord", NULL };
-static const char *ncmpcpp[]  = { "st", "-e", "ncmpcpp", NULL };
+static const char *brave[]  	  = { "brave", NULL };
+static const char *discord[]	  = { "discord", NULL };
+static const char *ncmpcpp[]	  = { "st", "-e", "ncmpcpp", NULL };
+static const char *pulsemixer[]	  = { "st", "-e", "pulsemixer", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -79,6 +81,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_b,      spawn,          {.v = brave   } },
 	{ MODKEY,                       XK_w,      spawn,          {.v = discord } },
 	{ MODKEY,                       XK_n,      spawn,          {.v = ncmpcpp } },
+	{ MODKEY,                       XK_p,      spawn,          {.v = pulsemixer } },
 	/* End personal bindings */
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
