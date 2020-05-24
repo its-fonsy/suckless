@@ -1,0 +1,7 @@
+*.o
+*.rej
+*.orig
+config.def.h
+dwm/dwm
+st/st
+dmenu/dmenu
