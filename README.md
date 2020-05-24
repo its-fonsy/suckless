@@ -3,7 +3,7 @@ This my fork of `dmenu`, `st` and `dwm`.
 
 ![screenshot](screenshot.png "Screenshot")
 
-The font used is `Hermit`.
+The font used in `dwm` is `Hermit`. The one used in `st` is `Fira Code`.
 
 # Installation
 Clone the repo
