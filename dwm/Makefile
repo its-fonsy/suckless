@@ -26,7 +26,11 @@ dwm: ${OBJ}
 	${CC} -o $@ ${OBJ} ${LDFLAGS}
 
 clean:
-	rm -f dwm ${OBJ} dwm-${VERSION}.tar.gz config.def.h *.o *.orig
+	$(RM) dwm ${OBJ}
+	$(RM) dwm-${VERSION}.tar.gz
+	$(RM) config.def.h
+	$(RM) *.o
+	$(RM) *.orig
 
 dist: clean
 	mkdir -p dwm-${VERSION}
