@@ -67,7 +67,7 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 static const char *termcmd[]  = { "st", NULL };
 
 /* Personal variable*/
-static const char *brave[]  	  = { "brave", NULL };
+static const char *firefox[]  	  = { "firefox", NULL };
 static const char *discord[]	  = { "discord", NULL };
 static const char *ncmpcpp[]	  = { "st", "-e", "ncmpcpp", NULL };
 static const char *pulsemixer[]	  = { "st", "-e", "pulsemixer", NULL };
@@ -78,7 +78,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	//{ MODKEY,                       XK_b,      togglebar,      {0} },
 	/* Begin personal bindings */
-	{ MODKEY,                       XK_b,      spawn,          {.v = brave   } },
+	{ MODKEY,                       XK_b,      spawn,          {.v = firefox } },
 	{ MODKEY,                       XK_w,      spawn,          {.v = discord } },
 	{ MODKEY,                       XK_n,      spawn,          {.v = ncmpcpp } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = pulsemixer } },
