@@ -29,7 +29,12 @@ stest: stest.o
 	$(CC) -o $@ stest.o $(LDFLAGS)
 
 clean:
-	rm -f dmenu stest $(OBJ) dmenu-$(VERSION).tar.gz config.def.h *.o *.rej *.orig
+	$(RM) dmenu stest $(OBJ) dmenu-$(VERSION).tar.gz
+	$(RM) config.def.h
+	$(RM) *.o
+	$(RM) *.rej
+	$(RM) *.orig
+	
 
 dist: clean
 	mkdir -p dmenu-$(VERSION)

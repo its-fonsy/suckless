@@ -30,7 +30,12 @@ st: $(OBJ)
 	$(CC) -o $@ $(OBJ) $(STLDFLAGS)
 
 clean:
-	rm -f st $(OBJ) st-$(VERSION).tar.gz config.def.h *.o *.rej *.orig
+	$(RM) st $(OBJ) st-$(VERSION).tar.gz
+	$(RM) config.def.h
+	$(RM) *.o
+	$(RM) *.rej
+	$(RM) *.orig
+
 
 dist: clean
 	mkdir -p st-$(VERSION)

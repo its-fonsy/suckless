@@ -31,6 +31,7 @@ clean:
 	$(RM) config.def.h
 	$(RM) *.o
 	$(RM) *.orig
+	$(RM) *.rej
 
 dist: clean
 	mkdir -p dwm-${VERSION}
