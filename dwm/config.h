@@ -33,11 +33,12 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class     instance  title           tags mask  iscentered   isfloating  isterminal  noswallow  monitor */
-	{ "Gimp",    NULL,     NULL,           0,         0,           1,          0,          0,         -1 },
+	{ "Gimp",    NULL,     NULL,           0,         1,           1,          0,          0,         -1 },
 	{ "Firefox", NULL,     NULL,           1 << 8,    0,		   0,          0,         -1,         -1 },
+	{ "discord", NULL,	   NULL,		   2,	      0,		   0,          0,          1,         -1 },
 	{ "st",      NULL,     NULL,           0,         0,		   0,          1,         -1,         -1 },
-	{ NULL,      NULL,     "Event Tester", 0,         0,		   1,          0,          1,         -1 }, /* xev */
 	{ NULL,	 	 NULL,	   "pulsemixer",   0,	      1,		   1,          0,          1,         -1 },
+	{ NULL,      NULL,     "Event Tester", 0,         0,		   1,          0,          1,         -1 },
 };
 
 /* layout(s) */
