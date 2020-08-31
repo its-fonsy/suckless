@@ -39,6 +39,7 @@
 #ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
 #endif /* XINERAMA */
+#include <X11/extensions/shape.h>
 #include <X11/Xft/Xft.h>
 #include <X11/Xlib-xcb.h>
 #include <xcb/res.h>
@@ -123,6 +124,7 @@ struct Monitor {
 	int by;               /* bar geometry */
 	int mx, my, mw, mh;   /* screen size */
 	int wx, wy, ww, wh;   /* window area  */
+	int gappx;            /* gaps between windows */
 	unsigned int seltags;
 	unsigned int sellt;
 	unsigned int tagset[2];
@@ -208,6 +210,7 @@ static void sendmon(Client *c, Monitor *m);
 static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
 static void setfullscreen(Client *c, int fullscreen);
+static void setgaps(const Arg *arg);
 static void setlayout(const Arg *arg);
 static void setmfact(const Arg *arg);
 static void setup(void);
@@ -241,6 +244,8 @@ static Monitor *wintomon(Window w);
 static int xerror(Display *dpy, XErrorEvent *ee);
 static int xerrordummy(Display *dpy, XErrorEvent *ee);
 static int xerrorstart(Display *dpy, XErrorEvent *ee);
+static void drawroundedcorners(Client *c);
+
 static void zoom(const Arg *arg);
 
 static pid_t getparentprocess(pid_t p);
@@ -716,6 +721,7 @@ createmon(void)
 	m->nmaster = nmaster;
 	m->showbar = showbar;
 	m->topbar = topbar;
+	m->gappx = gappx;
 	m->lt[0] = &layouts[0];
 	m->lt[1] = &layouts[1 % LENGTH(layouts)];
 	strncpy(m->ltsymbol, layouts[0].symbol, sizeof m->ltsymbol);
@@ -1266,6 +1272,9 @@ manage(Window w, XWindowAttributes *wa)
 		unfocus(selmon->sel, 0);
 	c->mon->sel = c;
 	arrange(c->mon);
+
+    drawroundedcorners(c);
+
 	XMapWindow(dpy, c->win);
 	if (term)
 		swallow(term, c);
@@ -1377,6 +1386,9 @@ movemouse(const Arg *arg)
 				togglefloating(NULL);
 			if (!selmon->lt[selmon->sellt]->arrange || c->isfloating)
 				resize(c, nx, ny, c->w, c->h, 1);
+
+			drawroundedcorners(c);
+
 			break;
 		}
 	} while (ev.type != ButtonRelease);
@@ -1483,6 +1495,55 @@ resizeclient(Client *c, int x, int y, int w, int h)
 	XSync(dpy, False);
 }
 
+void drawroundedcorners(Client *c) {
+    // if set to zero in config.h, do not attempt to round
+    if(CORNER_RADIUS < 0) return;
+
+    // NOTE: this is extremely hacky and surely could be optimized.
+    //       Any X wizards out there reading this, please pull request.
+    if (CORNER_RADIUS > 0 && c && !c->isfullscreen) {
+        Window win;
+        win = c->win;
+        if(!win) return;
+
+        XWindowAttributes win_attr;
+        if(!XGetWindowAttributes(dpy, win, &win_attr)) return;
+
+        // set in config.h:
+        int dia = 2 * CORNER_RADIUS;
+        int w = c->w;
+        int h = c->h;
+        if(w < dia || h < dia) return;
+
+        Pixmap mask;
+        mask = XCreatePixmap(dpy, win, w, h, 1);
+        if(!mask) return;
+
+        XGCValues xgcv;
+        GC shape_gc;
+        shape_gc = XCreateGC(dpy, mask, 0, &xgcv);
+
+        if(!shape_gc) {
+            XFreePixmap(dpy, mask);
+            free(shape_gc);
+            return;
+        }
+
+        XSetForeground(dpy, shape_gc, 0);
+        XFillRectangle(dpy, mask, shape_gc, 0, 0, w, h);
+        XSetForeground(dpy, shape_gc, 1);
+        XFillArc(dpy, mask, shape_gc, 0, 0, dia, dia, 0, 23040);
+        XFillArc(dpy, mask, shape_gc, w-dia-1, 0, dia, dia, 0, 23040);
+        XFillArc(dpy, mask, shape_gc, 0, h-dia-1, dia, dia, 0, 23040);
+        XFillArc(dpy, mask, shape_gc, w-dia-1, h-dia-1, dia, dia, 0, 23040);
+        XFillRectangle(dpy, mask, shape_gc, CORNER_RADIUS, 0, w-dia, h);
+        XFillRectangle(dpy, mask, shape_gc, 0, CORNER_RADIUS, w, h-dia);
+        XShapeCombineMask(dpy, win, ShapeBounding, 0, 0, mask, ShapeSet);
+        XFreePixmap(dpy, mask);
+        XFreeGC(dpy, shape_gc);
+    }
+}
+
 void
 resizemouse(const Arg *arg)
 {
@@ -1538,6 +1599,7 @@ resizemouse(const Arg *arg)
 		selmon = m;
 		focus(NULL);
 	}
+    drawroundedcorners(c);
 }
 
 void
@@ -1696,6 +1758,16 @@ setfullscreen(Client *c, int fullscreen)
 		resizeclient(c, c->x, c->y, c->w, c->h);
 		arrange(c->mon);
 	}
+}
+
+void
+setgaps(const Arg *arg)
+{
+	if ((arg->i == 0) || (selmon->gappx + arg->i < 0))
+		selmon->gappx = 0;
+	else
+		selmon->gappx += arg->i;
+	arrange(selmon);
 }
 
 void
@@ -1875,7 +1947,8 @@ tagmon(const Arg *arg)
 void
 tile(Monitor *m)
 {
-	unsigned int i, n, h, mw, my, ty;
+	unsigned int i, n, h, r, g = 0, mw, my, ty;
+
 	Client *c;
 
 	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
@@ -1883,20 +1956,20 @@ tile(Monitor *m)
 		return;
 
 	if (n > m->nmaster)
-		mw = m->nmaster ? m->ww * m->mfact : 0;
+		mw = m->nmaster ? (m->ww - (g = gappx)) * m->mfact : 0;
 	else
-		mw = m->ww;
-	for (i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+		mw = m->ww - m->gappx;
+	for (i = 0, my = ty = m->gappx, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 		if (i < m->nmaster) {
-			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
-			resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), 0);
-			if (my + HEIGHT(c) < m->wh)
-				my += HEIGHT(c);
+			h = (m->wh - my) / (MIN(n, m->nmaster) - i) - m->gappx;
+			resize(c, m->wx + m->gappx, m->wy + my, mw - (2*c->bw) - m->gappx, h - (2*c->bw), 0);
+			if (my + HEIGHT(c) + m->gappx < m->wh)
+				my += HEIGHT(c) + m->gappx;
 		} else {
-			h = (m->wh - ty) / (n - i);
-			resize(c, m->wx + mw, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), 0);
-			if (ty + HEIGHT(c) < m->wh)
-				ty += HEIGHT(c);
+			h = (m->wh - ty) / (n - i) - m->gappx;
+			resize(c, m->wx + mw + m->gappx, m->wy + ty, m->ww - mw - (2*c->bw) - 2*m->gappx, h - (2*c->bw), 0);
+			if (ty + HEIGHT(c) + m->gappx < m->wh)
+				ty += HEIGHT(c) + m->gappx;
 		}
 }
 
