@@ -70,13 +70,13 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_gray4, "-sf", col_gray1, NULL };
-static const char *termcmd[]  = { "st", NULL };
+static const char *termcmd[]  = { "termite", NULL };
 
 /* Personal variable*/
 static const char *firefox[]  	  = { "firefox", NULL };
 static const char *discord[]	  = { "discord", NULL };
-static const char *ncmpcpp[]	  = { "st", "-e", "ncmpcpp", NULL };
-static const char *pulsemixer[]	  = { "st", "-e", "pulsemixer", NULL };
+static const char *ncmpcpp[]	  = { "termite", "-e", "ncmpcpp", NULL };
+static const char *pulsemixer[]	  = { "termite", "-e", "pulsemixer", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
