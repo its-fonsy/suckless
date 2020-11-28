@@ -5,7 +5,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Fira Mono:pixelsize=15:antialias=true:autohint=true";
+static char *font = "UbuntuMono Nerd Font:pixelsize=17:antialias=true:autohint=true";
 static int borderpx = 2;
 
 /*
@@ -202,15 +202,13 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_Prior,       zoom,           {.f = +1} },
 	{ TERMMOD,              XK_Next,        zoom,           {.f = -1} },
 	{ TERMMOD,              XK_Home,        zoomreset,      {.f =  0} },
+	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
 	{ MODKEY,               XK_c,           clipcopy,       {.i =  0} },
 	{ MODKEY,               XK_v,           clippaste,      {.i =  0} },
-	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
-	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
-	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
 	{ MODKEY,	            XK_Page_Up,     kscrollup,      {.i = -1} },
 	{ MODKEY,	            XK_Page_Down,   kscrolldown,    {.i = -1} },
-	{ MODKEY,	            XK_k,		    kscrollup,      {.i = 1} },
-	{ MODKEY,	            XK_j,		   	kscrolldown,    {.i = 1} },
+	{ MODKEY,	            XK_k,		    kscrollup,      {.i =  1} },
+	{ MODKEY,	            XK_j,		   	kscrolldown,    {.i =  1} },
 	{ MODKEY,               XK_l,           externalpipe,   {.v = openurlcmd } },
 	{ MODKEY,               XK_y,           externalpipe,   {.v = copyurlcmd } },
 	{ MODKEY,               XK_o,           externalpipe,   {.v = copyoutput } },
