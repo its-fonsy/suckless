@@ -78,6 +78,7 @@ static const char *firefox[]  	  = { "firefox", NULL };
 static const char *discord[]	  = { "discord", NULL };
 static const char *ncmpcpp[]	  = { term, "-e", "ncmpcpp", NULL };
 static const char *pulsemixer[]	  = { term, "-e", "pulsemixer", NULL };
+static const char *switchkbmap[]  = { "switch_kb", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -85,6 +86,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	//{ MODKEY,                       XK_b,      togglebar,      {0} },
 	/* Begin personal bindings */
+	{ MODKEY,                       XK_a,      spawn,          {.v = switchkbmap } },
 	{ MODKEY,                       XK_b,      spawn,          {.v = firefox } },
 	{ MODKEY,                       XK_w,      spawn,          {.v = discord } },
 	{ MODKEY,                       XK_n,      spawn,          {.v = ncmpcpp } },
