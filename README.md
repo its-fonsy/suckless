@@ -1,3 +1,7 @@
+# [OUTDATED]
+I don't use anymore `dwm` and `st`, I switched to `bspwm` and `alacritty`.
+If you want see more check my [dotfiles](https://github.com/its-fonsy/dotfiles). 
+
 # suckless
 This my fork of `dmenu`, `st` and `dwm`.
 
