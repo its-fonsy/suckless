@@ -38,7 +38,8 @@ static const Rule rules[] = {
 	{ "Firefox", NULL,     NULL,           		1 << 8,   0,		   0,          0,         -1,         -1 },
 	{ "discord", NULL,	   NULL,		   		2,	      0,		   0,          0,          1,         -1 },
 	{ "st",      NULL,     NULL,           		0,        0,		   0,          1,         -1,         -1 },
-	{ NULL,	 	 NULL,	   "pulsemixer",   		0,	      1,		   1,          0,          1,         -1 },
+	{ "alacritty",      NULL,     NULL,           		0,        0,		   0,          1,         -1,         -1 },
+	{ NULL,	 	 NULL,	   "pulsemixer",   		0,	      0,		   1,          0,          1,         -1 },
 	{ NULL,      NULL,     "Event Tester", 		0,        0,		   1,          0,          1,         -1 },
 	{ NULL,      NULL,     "Payload Injector",  0,        0,		   0,          0,          1,         -1 }
 };
@@ -70,7 +71,7 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_gray4, "-sf", col_gray1, NULL };
-static const char term[]  = "st";
+static const char term[]  = "alacritty";
 static const char *termcmd[]  = { term, NULL };
 
 /* Personal variable*/
